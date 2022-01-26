@@ -1,51 +1,75 @@
-var fixedRect, movingRect,Gameobject1,Gameobject2,Gameobject3,Gmaeobject4;
+var canvas;
+var block1,block2,block3,block4;
+var ball, edges;
+var music;
 
-function setup() {
-  createCanvas(1200,800);
-  fixedRect = createSprite(600, 400, 50, 80);
-  fixedRect.shapeColor = "green";
-  fixedRect.debug = true;
-  movingRect = createSprite(400,200,80,30);
-  movingRect.shapeColor = "green";
-  movingRect.debug = true;
-  Gameobject1= createSprite(100,100,50,50);
-  Gameobject1.shapeColor="blue";
-  Gameobject2= createSprite(200,100,50,50);
-  Gameobject2.shapeColor="white";
-  Gameobject3= createSprite(300,100,50,50);
-  Gameobject3.shapeColor="yellow";
-  Gameobject4= createSprite(400,100,50,50);
-  Gameobject4.shapeColor="orange";
+function preload(){
+    music = loadSound("music.mp3");
 }
 
+
+function setup(){
+    canvas = createCanvas(800,600);
+
+    block1 = createSprite(0,580,360,30);
+    block1.shapeColor = "blue";
+
+    block2 = createSprite(295,580,200,30);
+    block2.shapeColor = "orange";
+
+    block3 = createSprite(515,580,200,30);
+    block3.shapeColor = "red";
+
+    block4 = createSprite(740,580,220,30);
+    block4.shapeColor = "green";
+
+    ball = createSprite(random(20,750),100, 40,40);
+    ball.shapeColor = rgb(255,255,255);
+    ball.velocityX = 4;
+    ball.velocityY = 9;
+
+}
 
 function draw() {
-  background(0,0,0);  
-  movingRect.x = World.mouseX;
-  movingRect.y = World.mouseY;
-if (isTouching(movingRect,Gameobject3)){
-  movingRect.shapeColor = "red";
-  Gameobject3.shapeColor = "red";
-}
- else{
-  movingRect.shapeColor = "green";
-  Gameobject3.shapeColor = "green";
- }
-  
-  drawSprites();
-}
-function isTouching(O1,O2){
-  if(O1.x - O2.x < O2.width/2 + O1.width/2
-    && O2.x - O1.x < O2.width/2 + O1.width/2
-    && O1.y - O2.y < O2.height/2 + O1.height/2
-    && O2.y - O1.y < O2.height/2 + O1.height/2) {
- 
- return true
-}
-else {
-  
-  return false
-}
-}
+    background(rgb(169,169,169));
+    edges=createEdgeSprites();
+    ball.bounceOff(edges);
 
+    if( ball.bounceOff(block1)){
+        ball.shapeColor = "blue";
+        music.play();
+    }
 
+    if(block2.isTouching(ball)){
+        ball.shapeColor = "orange";
+        ball.velocityX = 0;
+        ball.velocityY = 0;
+        
+        //music.stop;
+        //music=stop();
+        music.stop();
+        //stop(music);
+    }
+
+    if(block3.isTouching(ball) && ball.bounceOff(block3)){
+        ball.shapeColor = "red";
+    }
+
+    //if(block4(ball) && ball(block4)){
+    //    ball.shapeColor = "green";
+    //}
+
+    //if(block4.isTouching(ball)  ball.bounceOff(block4)){
+    //    ball.shapeColor = "green";
+    //}
+
+    //if(block4.isTouching() && ball.bounceOff()){
+    //    ball.shapeColor = "green";
+    //}
+
+    if(block4.isTouching(ball) && ball.bounceOff(block4)){
+        ball.shapeColor = "green";
+    }
+
+    drawSprites();
+}
